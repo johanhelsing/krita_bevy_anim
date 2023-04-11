@@ -1,6 +1,6 @@
 # Krita to Bevy animation workflow
 
-Goal: 1-click in Krita, see animation in game within seconds
+Goal: 1-click in Krita, see animation in game within seconds (milliseconds?)
 
 I tried to find a nice way to export krita animations to something Bevy would
 accept, but couldn't find any, this is what I've got so far.
