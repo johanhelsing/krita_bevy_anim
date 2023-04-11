@@ -21,7 +21,7 @@ The workflow... works, but there are a few manual steps left
 ### 1. Install krita flipbook baking tool
 
 ```shell
-cargo install --path .
+cargo install --git https://github.com/johanhelsing/krita_bevy_anim
 ```
 
 ### 2. Add `bevy_titan`
@@ -61,7 +61,7 @@ TODO: automate this step in krita plugin
 Run the tool you installed earlier:
 
 ```shell
-bevy_krita_anim path/to/render_folder --output path/to/game/assets/your_anim
+krita_bevy_anim path/to/render_folder --output path/to/game/assets/your_anim
 ```
 
 This will create a couple of files:

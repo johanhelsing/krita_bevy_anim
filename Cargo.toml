@@ -1,5 +1,5 @@
 [package]
-name = "bevy_krita_anim"
+name = "krita_bevy_anim"
 version = "0.1.0"
 edition = "2021"
 
