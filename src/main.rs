@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use clap::Parser;
 use image::{ColorType, GenericImageView, RgbaImage};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 /// A program
 #[derive(Parser)]
@@ -16,12 +16,40 @@ struct Args {
     length: Option<u32>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct Flippy {
     /// the timings (when to start) each frame
     pub timings: Vec<u32>,
     /// the length of the entire animation
     pub length: u32,
+}
+
+mod titan_format {
+    use serde::Serialize;
+
+    #[derive(Debug, Serialize)]
+    pub struct SpriteSheetManifest {
+        /// Path to the spritesheet image asset.
+        pub path: String,
+        /// Width and height of a tile inside the spritesheet.
+        pub tile_size: Rect,
+        /// How many columns of tiles there are inside the spritesheet.
+        pub columns: usize,
+        /// How many rows of tiles there are inside the spritesheet.
+        pub rows: usize,
+        #[serde(default)]
+        /// Padding between tiles.
+        pub padding: Option<Rect>,
+        #[serde(default)]
+        /// Offset from the top left from where the tiling begins.
+        pub offset: Option<Rect>,
+    }
+
+    #[derive(Debug, Serialize)]
+    pub struct Rect {
+        pub w: f32,
+        pub h: f32,
+    }
 }
 
 fn main() -> anyhow::Result<()> {
@@ -89,9 +117,25 @@ fn main() -> anyhow::Result<()> {
 
     let flippy = Flippy { length, timings };
 
-    let flippy_json = serde_json::to_string(&flippy)?;
     let flippy_path = format!("{output_base_name}.flippy");
-    std::fs::write(flippy_path, flippy_json)?;
+    let flippy_ron = ron::to_string(&flippy)?;
+    std::fs::write(flippy_path, flippy_ron)?;
+
+    // todo make a titan file as well?
+    let titan = titan_format::SpriteSheetManifest {
+        path: format!("{output_base_name}.png"),
+        tile_size: titan_format::Rect {
+            w: w as f32,
+            h: h as f32,
+        },
+        columns: images.len(),
+        rows: 1,
+        padding: None,
+        offset: None,
+    };
+    let titan_path = format!("{output_base_name}.titan");
+    let titan_ron = ron::to_string(&titan)?;
+    std::fs::write(titan_path, titan_ron)?;
 
     Ok(())
 }
