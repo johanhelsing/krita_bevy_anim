@@ -18,8 +18,6 @@ struct Args {
 
 #[derive(Serialize, Deserialize)]
 pub struct Flippy {
-    pub tile_width: u32,
-    pub tile_height: u32,
     /// the timings (when to start) each frame
     pub timings: Vec<u32>,
     /// the length of the entire animation
@@ -89,12 +87,7 @@ fn main() -> anyhow::Result<()> {
         last_unique_frame + 1
     };
 
-    let flippy = Flippy {
-        length,
-        timings,
-        tile_width: w,
-        tile_height: h,
-    };
+    let flippy = Flippy { length, timings };
 
     let flippy_json = serde_json::to_string(&flippy)?;
     let flippy_path = format!("{output_base_name}.flippy");
