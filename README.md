@@ -18,22 +18,11 @@ The workflow... works, but there are a few manual steps left
 
 ## Preparation
 
-### 1. Install krita flipbook baking tool
+Install krita flipbook baking tool from this repository:
 
 ```shell
 cargo install --git https://github.com/johanhelsing/krita_bevy_anim
 ```
-
-### 2. Add `bevy_titan`
-
-Add `bevy_titan` to your game's dependencies and add its
-`SpriteSheetLoaderPlugin`. This is a tiny plugin that adds support for `.titan`
-sprite sheet manifests, which we're using to communicate grid size and
-dimensions to Bevy.
-
-### 3. Enable asset hot reloading
-
-Read bevy docs for how.
 
 ## Workflow
 
@@ -70,6 +59,27 @@ This will create a couple of files:
 - `your_anim.titan`: Manifest file containing details about how the atlas is
   partitioned.
 - `your_anim.flippy`: A file containing frame timing information
+
+## Using the assets in your game
+
+### 1. Add `bevy_titan` plugin
+
+Add `bevy_titan` to your game's dependencies and add its
+`SpriteSheetLoaderPlugin`. This is a tiny plugin that adds support for the
+`.titan` sprite sheet manifest, we generated earlier, which we're using to
+communicate grid size and dimensions to Bevy.
+
+### 2. Enable asset hot reloading
+
+Read bevy docs for how.
+
+You should now be good to go, for subsequent updates, simply leave your game
+running, then:
+
+1. render the animation
+2. run the baking command
+
+And you should see your updated animation.
 
 ## The solutions I didn't like
 
