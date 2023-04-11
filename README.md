@@ -69,7 +69,15 @@ Add `bevy_titan` to your game's dependencies and add its
 `.titan` sprite sheet manifest, we generated earlier, which we're using to
 communicate grid size and dimensions to Bevy.
 
-### 2. Enable asset hot reloading
+### 2. Load the `.titan` file
+
+```rust
+let anim_atlas: Handle<TextureAtlas> = asset_server.load("your_anim.titan");
+```
+
+TODO: explain how to use timings file.
+
+### 3. Enable asset hot reloading
 
 Read bevy docs for how.
 
