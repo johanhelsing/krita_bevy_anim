@@ -70,16 +70,18 @@ Hit `File` -> `Render Animation`
 Don't worry, Krita will remember these settings. Next time you'll only need to
 hit render and ok.
 
-Our watcher script will detect the render
+...or bind the "Render Animation Again" action to a keyboard shortcut through
+the Krita settings.
 
-This will create a couple of files in your assets folder:
+## Using the assets in your game
 
-- `your_anim.png`: All the sprites in one texture
+Our watcher script will detect the render and create some new files in your assets folder:
+
+- `your_anim.png`: All the unique sprites baked into one texture
 - `your_anim.titan`: Manifest file containing details about how the atlas is
   partitioned.
 - `your_anim.flippy`: A file containing frame timing
 
-## Using the assets in your game
 
 ### 1. Add `bevy_titan` plugin
 
