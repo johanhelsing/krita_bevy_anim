@@ -11,10 +11,9 @@ Work in progress!
 
 The workflow... works, but there are a few manual steps left
 
-- [ ] make krita python plugin to render sprites and run atlas baker through
-  shortcut
-- [ ] add support for `bevy_trickfilm` animation format?
-- [ ] add support for multi-row atlases
+- [ ] make bevy_krita_anim able to watch itself, so we don't need `watchexec`
+- [ ] support for `bevy_trickfilm` animation manifest format?
+- [ ] support for multi-row atlases
 
 ## Prerequisites
 
@@ -23,13 +22,13 @@ The workflow... works, but there are a few manual steps left
 
 ## Preparation
 
-Install krita flipbook baking tool from this repository:
+Install the atlas baking tool from this repository:
 
 ```shell
 cargo install --git https://github.com/johanhelsing/krita_bevy_anim
 ```
 
-Install `watchexec-cli` so we can bake automatically after rendering:
+Install `watchexec-cli` so we can trigger baking automatically after rendering:
 
 ```shell
 cargo install watchexec-cli
