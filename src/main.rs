@@ -1,3 +1,5 @@
+use std::fs;
+
 use anyhow::anyhow;
 use clap::Parser;
 use image::{ColorType, GenericImageView, RgbaImage};
@@ -14,6 +16,9 @@ struct Args {
     /// length in frames
     #[clap(long, short)]
     length: Option<u32>,
+    /// on success, remove source render images
+    #[clap(long)]
+    rm: bool,
 }
 
 #[derive(Serialize)]
@@ -57,12 +62,19 @@ fn main() -> anyhow::Result<()> {
         source_path,
         length: min_length,
         output,
+        rm,
     } = Args::parse();
+    println!("Generating sprite atlas from render folder {source_path:?}");
+
+    let mut image_files = Vec::new();
+    for file in fs::read_dir(&source_path)? {
+        let file = file?;
+        image_files.push(file);
+    }
 
     let mut images = Vec::new();
 
-    for file in std::fs::read_dir(&source_path)? {
-        let file = file?;
+    for file in image_files.iter() {
         let image = image::open(file.path())?;
         let file_name = file.file_name();
         let frame = file_name
@@ -96,13 +108,15 @@ fn main() -> anyhow::Result<()> {
     // place next to the source dir with same name by default
     let output_base_name = output.unwrap_or(source_path);
 
+    let atlas_path = format!("{output_base_name}.png");
     image::save_buffer(
-        format!("{output_base_name}.png"),
+        &atlas_path,
         &atlas_image,
         atlas_image.width(),
         atlas_image.height(),
         ColorType::Rgba8,
     )?;
+    println!("generated {atlas_path}");
 
     let timings: Vec<_> = images.iter().map(|(f, _)| *f).collect();
 
@@ -119,10 +133,11 @@ fn main() -> anyhow::Result<()> {
 
     let flippy_path = format!("{output_base_name}.flippy");
     let flippy_ron = ron::to_string(&flippy)?;
-    std::fs::write(flippy_path, flippy_ron)?;
+    fs::write(&flippy_path, flippy_ron)?;
+    println!("generated {flippy_path}");
 
     let titan = titan_format::SpriteSheetManifest {
-        path: format!("{output_base_name}.png"),
+        path: atlas_path,
         tile_size: titan_format::Rect {
             w: w as f32,
             h: h as f32,
@@ -134,7 +149,15 @@ fn main() -> anyhow::Result<()> {
     };
     let titan_path = format!("{output_base_name}.titan");
     let titan_ron = ron::to_string(&titan)?;
-    std::fs::write(titan_path, titan_ron)?;
+    fs::write(&titan_path, titan_ron)?;
+    println!("generated {titan_path}");
+
+    if rm {
+        println!("removing source images...");
+        for file in image_files {
+            fs::remove_file(file.path())?;
+        }
+    }
 
     Ok(())
 }
