@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=krita_bevy_anim
+X-Python-2-Compatible=false
+X-Krita-Manual=myPluginManual.html
+Name=Bevy Animation Export
+Comment=Export animations for use with bevy_titan
