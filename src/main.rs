@@ -3,7 +3,7 @@ use clap::Parser;
 use image::{ColorType, GenericImageView, RgbaImage};
 use serde::Serialize;
 
-/// A program
+/// Bake krita animation render output to a sprite atlas + metadata
 #[derive(Parser)]
 struct Args {
     /// Path to the directory containing the source images
@@ -121,7 +121,6 @@ fn main() -> anyhow::Result<()> {
     let flippy_ron = ron::to_string(&flippy)?;
     std::fs::write(flippy_path, flippy_ron)?;
 
-    // todo make a titan file as well?
     let titan = titan_format::SpriteSheetManifest {
         path: format!("{output_base_name}.png"),
         tile_size: titan_format::Rect {
