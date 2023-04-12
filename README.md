@@ -16,6 +16,11 @@ The workflow... works, but there are a few manual steps left
 - [ ] add support for `bevy_trickfilm` animation format?
 - [ ] add support for multi-row atlases
 
+## Prerequisites
+
+- Krita 5+
+- cargo
+
 ## Preparation
 
 Install krita flipbook baking tool from this repository:
@@ -23,6 +28,29 @@ Install krita flipbook baking tool from this repository:
 ```shell
 cargo install --git https://github.com/johanhelsing/krita_bevy_anim
 ```
+
+Install `watchexec-cli` so we can bake automatically after rendering:
+
+```shell
+cargo install watchexec-cli
+```
+
+Create an *empty* render folder
+
+```shell
+mkdir -p /path/to/render
+```
+
+Watch for renders appearing here:
+
+```shell
+cd /path/to/render
+watchexec -e png "krita_bevy_anim . --rm --output /path/to/game/assets/your_anim"
+```
+
+This will watch for new images appearing in the render folder and 
+
+Let this run in the background while you work in Krita
 
 ## Workflow
 
@@ -36,29 +64,21 @@ skinning etc.
 Hit `File` -> `Render Animation`
 
 - Choose "Image sequence"
-- Set the location to an empty folder
+- Set the location to the empty render folder you created earlier
 - Leave "base name" empty (required, for now at least)
 - Choose "Only render unique frames"
 
 Don't worry, Krita will remember these settings. Next time you'll only need to
 hit render and ok.
 
-### 3. Bake textures and timing info
+Our watcher script will detect the render
 
-TODO: automate this step in krita plugin
-
-Run the tool you installed earlier:
-
-```shell
-krita_bevy_anim path/to/render_folder --output path/to/game/assets/your_anim
-```
-
-This will create a couple of files:
+This will create a couple of files in your assets folder:
 
 - `your_anim.png`: All the sprites in one texture
 - `your_anim.titan`: Manifest file containing details about how the atlas is
   partitioned.
-- `your_anim.flippy`: A file containing frame timing information
+- `your_anim.flippy`: A file containing frame timing
 
 ## Using the assets in your game
 
